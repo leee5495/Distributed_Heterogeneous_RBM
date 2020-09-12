@@ -91,5 +91,4 @@ class RBM(nn.Module):
                 batch_error = self.contrastive_divergence(vk)
                 epoch_error += batch_error
             print('Epoch Error (epoch=%d): %.4f' % (epoch, epoch_error))
-    
         torch.save(self.state_dict(), sfile)
