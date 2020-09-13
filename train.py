@@ -42,7 +42,7 @@ if __name__ == "__main__":
     arhr = test.arhr(prediction, data.last_rating_test)
     print("HR_10 : {:.02f}".format(hr_10))
     print("HR_25 : {:.02f}".format(hr_25))
-    print("ARHR:   {:02f}".format(arhr))
+    print("ARHR:   {:.02f}".format(arhr))
     
     sample_ind = 100
     output_vec = prediction[sample_ind]
