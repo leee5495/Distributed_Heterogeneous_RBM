@@ -45,7 +45,6 @@ class DHRBM:
         self.cluster_data(train_data)
         self.cluster_rbms = []
         for i in range(self.num_cluster):
-            # train ensemble RBM1 on ensemble cluster 1
             cluster_rbm = copy.deepcopy(self.base_rbm)
             cluster_rbm.weights_momentum = torch.zeros(self.num_visible, self.num_hidden)
             cluster_rbm.visible_bias_momentum = torch.zeros(self.num_visible)
