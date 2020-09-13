@@ -51,7 +51,7 @@ class DHRBM:
             cluster_rbm.visible_bias_momentum = torch.zeros(self.num_visible)
             cluster_rbm.hidden_bias_momentum = torch.zeros(self.num_hidden)
         
-            cluster_rbm.train(self.cluster_data[i], epochs, batch_size)
+            cluster_rbm.train(self.cluster_data[i], bootstrap_epochs, batch_size)
             self.cluster_rbms.append(cluster_rbm)
             
     def make_ensemble_model(self, input_dim, hidden_dim, output_dim):
