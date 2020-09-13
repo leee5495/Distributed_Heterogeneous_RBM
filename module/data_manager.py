@@ -39,7 +39,7 @@ class DataManager:
 
             self.last_rating_train = data_array[valid_ind:, rating_shape[1]+meta_shape[1]:rating_shape[1]+meta_shape[1]+1].astype(int)
             self.rating_train_with_last = self.rating_train.copy()
-            self.rating_train_with_last[np.arange(rating_shape[0]), self.last_rating_train[:,0]] = 1
+            self.rating_train_with_last[np.arange(len(self.last_rating_train)), self.last_rating_train[:,0]] = 1
             self.last_rating_test = data_array[:valid_ind, rating_shape[1]+meta_shape[1]:rating_shape[1]+meta_shape[1]+1].astype(int)
             
             self.last_meta_train = data_array[valid_ind:, -3:]

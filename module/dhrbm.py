@@ -9,7 +9,7 @@ from sklearn.cluster import KMeans
 from keras.models import Model
 from keras.layers import Input, Dense
 
-from rbm import RBM
+from module.rbm import RBM
 
 class DHRBM:
     def __init__(self, num_visible, num_hidden, k, num_cluster, learning_rate=1e-2, momentum_coefficient=0.5, weight_decay=1e-4):
@@ -63,37 +63,26 @@ class DHRBM:
         train_set = torch.FloatTensor(train_data)
         hiddens = []
         for i in range(self.num_cluster):
-            hidden = self.cluster_rbms.sample_hidden(train_set).numpy()[:num_train]
+            hidden = self.cluster_rbms[i].sample_hidden(train_set).numpy()[:num_train]
             hiddens.append(hidden)
         base_hidden = self.base_rbm.sample_hidden(train_set).numpy()[:num_train]
         kmeans_dist = self.kmeans.transform(base_hidden)
         
         ensemble_input_data = np.concatenate(hiddens+[kmeans_dist], axis=1)
         return ensemble_input_data
-    
-    def make_ensemble_output(self, rating_data, meta_data):
-        ensemble_output_data = np.concatenate([rating_data, meta_data], axis=1)
-        return ensemble_output_data
         
-    def train_ensemble_model(self, train_data, test_data, num_train, epochs, batch_size):
+    def train_ensemble_model(self, train_data, output_data, num_train, epochs, batch_size):
         ensemble_input = self.make_ensemble_input(train_data, num_train)
-        ensemble_output = self.make_ensemble_output()
-        
         input_dim = ensemble_input.shape[1]
-        output_dim = ensemble_output.shape[1]
+        output_dim = output_data.shape[1]
         hidden_dim = int((input_dim-3)/3)
         
         self.make_ensemble_model(input_dim, hidden_dim, output_dim)
-        history = self.ensemble_model.fit(ensemble_input, ensemble_output,
+        history = self.ensemble_model.fit(ensemble_input, output_data,
                                           batch_size=batch_size, epochs=epochs,
                                           verbose=1)
         return history
     
     def predict(self, test_data):
         ensemble_input = self.make_ensemble_input(test_data, test_data.shape[0])
-        self.ensemble_model.predict(ensemble_input)
-        
-            
-        
-            
-    
+        return self.ensemble_model.predict(ensemble_input)

@@ -3,22 +3,24 @@ import os
 
 import numpy as np
 import pandas as pd
+from ast import literal_eval
 
 class Test:
     def __init__(self, datapath):
-        with open(os.path.join(datapath, "book_id"), "r") as fin:
+        with open(os.path.join(datapath, "book_id"), "r", encoding='utf-8') as fin:
             self.book_id = [line.strip() for line in fin]
         self.ind_to_book_id = {idx: book_id for idx, book_id in enumerate(self.book_id)}
-        with open(os.path.join(datapath, "genre_id"), "rb") as fin:
+        with open(os.path.join(datapath, "genre_id"), "r", encoding='utf-8') as fin:
             self.genre_id = [line.strip() for line in fin]
         self.ind_to_genre = {idx: genre_id for idx, genre_id in enumerate(self.genre_id)}
-        with open(os.path.join(datapath, "author_id"), "rb") as fin:
+        with open(os.path.join(datapath, "author_id"), "r", encoding='utf-8') as fin:
             self.author_id = [line.strip() for line in fin]
         self.ind_to_author = {idx: author_id for idx, author_id in enumerate(self.author_id)}
-        with open(os.path.join(datapath, "publisher_id"), "rb") as fin:
-            self.publisher_in = [line.strip() for line in fin]
+        with open(os.path.join(datapath, "publisher_id"), "r", encoding='utf-8') as fin:
+            self.publisher_id = [line.strip() for line in fin]
         self.ind_to_publisher = {idx: publisher_id for idx, publisher_id in enumerate(self.publisher_id)}
         self.meta = pd.read_csv(os.path.join(datapath, "meta.csv"))
+        self.meta.genre = self.meta.genre.apply(literal_eval)
         
         self.num_books = len(self.book_id)
         self.num_genre = len(self.genre_id)
@@ -88,3 +90,11 @@ class Test:
             if next_books[i][0] in top_k[i]:
                 hit += 1
         return hit/total
+    
+    def arhr(self, test_output, next_books):
+        next_books = np.reshape(np.array(next_books), (-1,)).astype(int)
+        temp = -test_output
+        order = temp.argsort()
+        ranks = order.argsort()+1
+        arhr = np.sum(1/ranks[np.arange(len(next_books)),next_books])/len(next_books)
+        return arhr
