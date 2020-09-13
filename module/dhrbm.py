@@ -90,18 +90,24 @@ class DHRBM:
         return self.ensemble_model.predict(ensemble_input)
     
     def save_model(self, modelpath):
-        torch.save(self.base_rbm, os.path.join(modelpath, "base_rbm.pt"))
+        self.base_rbm.save(os.path.join(modelpath, "base_rbm.pt"))
         for i in range(self.num_cluster):
-            torch.save(self.cluster_rbms[i], os.path.join(modelpath, "cluster_rbm{}.pt".format(i+1)))
+            self.cluster_rbms[i].save(os.path.join(modelpath, "cluster_rbm{}.pt".format(i+1)))
         with open(os.path.join(modelpath, "kmeans"), "wb") as fp:
             pickle.dump(self.kmeans, fp)
         self.ensemble_model.save(os.path.join(modelpath, "ensemble_model"))
         
     def load_model(self, modelpath):
-        self.base_rbm = torch.load(os.path.join(modelpath, "base_rbm.pt"))
+        self.base_rbm = RBM(self.num_visible, self.num_hidden, self.k, self.learning_rate, self.momentum_coefficient, self.weight_decay)
+        self.base_rbm.load(os.path.join(modelpath, "base_rbm.pt"))
+        
         self.cluster_rbms = []
         for i in range(self.num_cluster):
-            self.cluster_rbms.append(torch.load(os.path.join(modelpath, "cluster_rbm{}.pt".format(i+1))))
+            self.cluster_rbms.append(RBM(self.num_visible, self.num_hidden, self.k, self.learning_rate, self.momentum_coefficient, self.weight_decay))
+        for i in range(self.num_cluster):
+            self.cluster_rbms[i].load(os.path.join(modelpath, "cluster_rbm{}.pt".format(i+1)))
+            
         with open(os.path.join(modelpath, "kmeans"), "rb") as fp:
             self.kmeans = pickle.load(fp)
+            
         self.ensemble_model = load_model(os.path.join(modelpath, "ensemble_model"))

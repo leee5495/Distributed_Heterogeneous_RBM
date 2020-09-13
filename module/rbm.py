@@ -92,3 +92,6 @@ class RBM(nn.Module):
             
     def save(self, sfile):
         torch.save(self.state_dict(), sfile)
+            
+    def load(self, sfile):
+        self.load_state_dict(torch.load(sfile))
