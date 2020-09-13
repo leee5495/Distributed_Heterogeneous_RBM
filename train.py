@@ -6,8 +6,8 @@ from module.dhrbm import DHRBM
 from module.data_manager import DataManager
 
 if __name__ == "__main__":
-    datapath = "C:/Users/1615055/Distributed_Heterogeneous_RBM/data"
-    modelpath = "C:/Users/1615055/Distributed_Heterogeneous_RBM/model"
+    datapath = "./data"
+    modelpath = "./model"
     
     data = DataManager(datapath)
     test = Test(datapath)
