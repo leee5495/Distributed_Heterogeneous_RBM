@@ -33,6 +33,7 @@ if __name__ == "__main__":
     # train model
     dhrbm.train_cluster_rbm(cluster_train_data, epochs, bootstrap_epochs, batch_size)
     dhrbm.train_ensemble_model(cluster_train_data, train_data, num_train, ensemble_epochs, batch_size)
+    dhrbm.save_model(modelpath)
     
     # validation
     prediction = dhrbm.predict(valid_data)
