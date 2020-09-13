@@ -75,17 +75,20 @@ class RBM(nn.Module):
         random_probabilities = torch.rand(num)
         return random_probabilities
 
-    def predict(self,input_data) :
+    def predict(self,input_data):
         q_h0 = self._sigmoid(torch.matmul(input_data, self.weights) + self.hidden_bias)
         prediction = self._sigmoid(torch.matmul(q_h0, self.weights.t()) + self.visible_bias)
         return prediction
     
-    def train(self, train_data, vis, hidden, cd_k, epochs, batch_size,sfile) :
+    def train(self, train_data, epochs, batch_size):
+        train_data = torch.FloatTensor(train_data)
         for epoch in range(epochs):
             epoch_error = 0.0
-            for i in range(0, vis - batch_size, batch_size): 
+            for i in range(0, len(train_data), batch_size): 
                 vk = train_data[i:i+batch_size]
                 batch_error = self.contrastive_divergence(vk)
                 epoch_error += batch_error
             print('Epoch Error (epoch=%d): %.4f' % (epoch, epoch_error))
+            
+    def save(self, sfile):
         torch.save(self.state_dict(), sfile)
