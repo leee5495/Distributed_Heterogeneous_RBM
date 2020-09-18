@@ -58,6 +58,9 @@ class DHRBM:
         hidden_layer = Dense(hidden_dim, activation='relu')(input_layer)
         output = Dense(output_dim, activation='sigmoid')(hidden_layer)
         self.ensemble_model = Model(inputs=input_layer, outputs=output)
+        temp_weight = np.mean(np.array([self.cluster_rbms[i].weights.numpy().T for i in range(self.num_cluster)]), axis=0)
+        temp_bias = np.mean(np.array([self.cluster_rbms[i].visible_bias.numpy().T for i in range(self.num_cluster)]), axis=0)
+        self.ensemble_model.layers[2].set_weights([temp_weight, temp_bias])
         self.ensemble_model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
         
     def make_ensemble_input(self, train_data, num_train):

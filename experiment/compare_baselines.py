@@ -46,7 +46,7 @@ if __name__ == "__main__":
     dhrbm_time = end_time - start_time
     
     # ItemPop prediction
-    train_data = np.concatenate([data.rating_train, data.meta_train], axis=1)
+    train_data = np.concatenate([data.rating_train_with_last, data.meta_train_with_last], axis=1)
     valid_data = np.concatenate([data.rating_valid, data.meta_valid], axis=1)
     entire_data = np.concatenate([train_data, valid_data], axis=0)
     
