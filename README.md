@@ -1,6 +1,10 @@
 # Distributed Heterogeneous RBM
 Experimentation code for book recommendation with Distributed Heterogeneous RBM
 
+Paper: [Distributed Heterogeneous Restricted Boltzmann Machines for Book Recommendation](https://github.com/leee5495/Distributed_Heterogeneous_RBM/blob/master/misc/CICS_lej.pdf)
+<br>
+<br>
+
 ![image](https://github.com/leee5495/Distributed_Heterogeneous_RBM/blob/master/misc/%EB%8F%84%ED%98%95.png)
 
 ### Data
